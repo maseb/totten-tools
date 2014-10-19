@@ -3,6 +3,7 @@
 var mod = function(
   _,
   Promise,
+  Logger,
   Options,
   jsdom,
   md5
@@ -11,6 +12,8 @@ var mod = function(
   var PricePageParser = function() {
     this.initialize.apply(this, arguments);
   };
+
+  var Log = Logger.create("PricePageParser");
 
   _.extend(PricePageParser.prototype, {
     initialize: function(opts) {
@@ -50,10 +53,12 @@ var mod = function(
           return $(td).text();
         });
 
+        Log.debug("Row", id, JSON.stringify(rest));
+
         rest.unshift(id);
+
         finalRows.push(rest);
       });
-      console.log(finalRows);
       return finalRows;
     })
   });
@@ -64,6 +69,7 @@ var mod = function(
 module.exports = mod(
   require("underscore"),
   require("bluebird"),
+  require("thicket").c("logger"),
   require("thicket").c("options"),
   require("jsdom"),
   require("MD5")
