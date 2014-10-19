@@ -2,6 +2,7 @@
   "default": {
     "inFile": "resources/prices.html",
     "outFormat": "csv",
-    "outFile": "out/prices.csv"
+    "outFile": "out/prices.csv",
+    "jqueryPath": "node_modules/jquery/dist/jquery.js"
   }
 }

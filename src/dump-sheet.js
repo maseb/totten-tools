@@ -3,7 +3,10 @@
 var mod = function(
   _,
   Promise,
-  App
+  App,
+  PricePageParser,
+  fs,
+  path
 ) {
 
   var DumpSheet = function() {
@@ -14,7 +17,11 @@ var mod = function(
     up: Promise.method(function() {
       var inFile    = this.config("inFile"),
           outFile   = this.config("outFile"),
-          outFormat = this.config("outFormat");
+          parser    = new PricePageParser({
+            jqueryPath: path.normalize(path.join(__dirname, "..", this.config("jqueryPath")))
+          });
+
+      this._parser = parser;
 
       return Promise
         .bind(this)
@@ -22,16 +29,27 @@ var mod = function(
           return this._readInFile(inFile);
         })
         .then(function(fileContents) {
-          return this._index(fileContents);
+          return this._parse(fileContents);
         })
-        .then(function(indexedContents) {
-          return this._writeAs(outFormat, indexedContents, outFile);
+        .then(function(parsed) {
+          return this._write(parsed, outFile);
         });
     }),
 
-    _readInFile: Promise.method(function(filePath) {}),
-    _index: Promise.method(function(fileContents) {}),
-    _writeAs: Promise.method(function(format, contents, filePath) {})
+    _readInFile: Promise.method(function(filePath) {
+      return Promise.promisify(fs.readFile, fs)(filePath, { encoding: "utf8" });
+    }),
+
+    _parse: Promise.method(function(unparsedContents) {
+      return this._parser.parse(unparsedContents);
+    }),
+
+    _write: Promise.method(function(contents, filePath) {
+      var csv = _.map(contents, function(row) {
+        return row.join("\t");
+      }).join("\n");
+      return Promise.promisify(fs.writeFile, fs)(filePath, csv);
+    })
   });
 
   return DumpSheet;
@@ -40,5 +58,8 @@ var mod = function(
 module.exports = mod(
   require("underscore"),
   require("bluebird"),
-  require("thicket").c("app")
+  require("thicket").c("app"),
+  require("./parsers/price-page-parser"),
+  require("fs"),
+  require("path")
 );
