@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "totten-tools",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dump-sheet": "node ./script/dump-sheet.js --configurationFiles=configuration/default.json --scopes=default"
+  },
+  "author": "Mason Browne <m.public@academy15.com> (http://www.masonbrowne.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.3.6",
+    "jsdom": "^1.0.3",
+    "thicket": "^0.3.9",
+    "underscore": "^1.7.0"
+  }
+}

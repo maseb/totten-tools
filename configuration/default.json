@@ -1,0 +1,7 @@
+{
+  "default": {
+    "inFile": "resources/prices.html",
+    "outFormat": "csv",
+    "outFile": "out/prices.csv"
+  }
+}
